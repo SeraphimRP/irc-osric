@@ -44,8 +44,7 @@ func processMsg(nick string, msg string, conn *irc.Connection) {
         // TODO
     } else if strings.HasPrefix(msg, ".dm") && len(strings.Split(msg, " ")) == 2 {
         if len(dunmas) == 0 && len(strings.Split(msg, " ")[1]) > 0 {
-            var cmdarray = strings.Split(msg, " ")
-            dunmas = cmdarray[1]
+            dunmas = strings.Split(msg, " ")[1]
             fmt.Println("[cmd] dm - " + dunmas)
             conn.Privmsg(channel, "dm is now set to " + dunmas)
         } else {
