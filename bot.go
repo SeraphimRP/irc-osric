@@ -37,6 +37,8 @@ func fillCharmap(nick string, sect string, val string) {
     // vypr["stat"]["health"] = 100
     // vypr["info"]["name"] = "Peapod"
     // make(map[string]map[string]string)
+    var isDungeonMaster = false
+    if nick == dunmas { isDungeonMaster = true }
 }
 
 func processMsg(nick string, msg string, conn *irc.Connection) {
