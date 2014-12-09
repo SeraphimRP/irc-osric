@@ -40,8 +40,11 @@ func fillCharmap(nick string, sect string, val string) {
 }
 
 func processMsg(nick string, msg string, conn *irc.Connection) {
-    if strings.HasPrefix(msg, ".set") && len(strings.Split(msg, " ")) == 3 {
-        // TODO
+    if strings.HasPrefix(msg, ".set") && len(strings.Split(msg, " ")) == 4 {
+        var arg1 = strings.Split(msg, " ")[1]
+        var arg2 = strings.Split(msg, " ")[2]
+        var arg3 = strings.Split(msg, " ")[3]
+        fillCharmap(arg1, arg2, arg3)
     } else if strings.HasPrefix(msg, ".dm") && len(strings.Split(msg, " ")) == 2 {
         if len(dunmas) == 0 && len(strings.Split(msg, " ")[1]) > 0 {
             dunmas = strings.Split(msg, " ")[1]
