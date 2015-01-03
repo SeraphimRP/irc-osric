@@ -59,12 +59,12 @@ func findArguments(msg string) []string {
 
 func fillCharmap(nick string, cat string, item string, val string) {
     charmap = map[string]map[string]map[string]string { nick: map[string]map[string]string{ cat: map[string]string{ item: val, }, }, }
-}
 
 func handleMessage(nick string, msg string, conn *irc.Connection) {
     var args = findArguments(msg)
+    var argc = len(args)
 
-    if strings.HasPrefix(msg, ".set") && len(args) == 5 {
+    if strings.HasPrefix(msg, ".set") && argc == 5 {
         // thanks to jmbi (github.com/karlmcg) for helping me think
         if nick == dunmas {
             fillCharmap(args[0], args[1], args[2], args[3])
@@ -74,10 +74,10 @@ func handleMessage(nick string, msg string, conn *irc.Connection) {
             fmt.Println("[cmd] set - " + args[0] + "'s " + args[2] + " in " + args[1] + " is set to " + args[3] + ".")
             conn.Privmsg(channel, nick + " used override, it's super effective!")
         }
-    } else if strings.HasPrefix(msg, ".print") && len(args) == 4 {
+    } else if strings.HasPrefix(msg, ".print") && argc == 4 {
         fmt.Println("[cmd] print - " + args[0] + "'s " + args[1] + " in " + args[3] + ".")
         conn.Privmsg(channel, args[0] + "'s " + args[0] + " is set to " + charmap[args[0]][args[1]][args[2]] + ".")
-    } else if strings.HasPrefix(msg, ".mode") && len(args) == 2 {
+    } else if strings.HasPrefix(msg, ".mode") && argc == 2 {
         if stringInSlice(args[0], rulemod) {
             fmt.Println("[cmd] mode - change failed, already set to true")
             conn.Privmsg(channel, args[0] + " is already set to true.")
@@ -85,14 +85,14 @@ func handleMessage(nick string, msg string, conn *irc.Connection) {
             fmt.Println("[cmd] mode " + args[0])
             conn.Privmsg(channel, "set " + args[0] + " to true.")
         }
-    } else if strings.HasPrefix(msg, ".rmmode") && len(args) == 2 {
+    } else if strings.HasPrefix(msg, ".rmmode") && argc == 2 {
         if removeItemInSlice(args[0], rulemod) {
             fmt.Println("[cmd] rmmode - " + args[0])
             conn.Privmsg(channel, args[0] + " has been removed from the list of modes.")
         } else {
             conn.Privmsg(channel, args[0] + " isn't in the list of modes.")
         }
-    } else if strings.HasPrefix(msg, ".dm") && len(args) == 2 {
+    } else if strings.HasPrefix(msg, ".dm") && argc == 2 {
         if len(dunmas) == 0 {
             dunmas = args[0]
             fmt.Println("[cmd] dm - " + dunmas)
