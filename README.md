@@ -9,6 +9,8 @@ TODO:
 * ~~Stat Manipulation~~
 * ~~Permission System~~
 * ~~Character System~~
+* Import/Export Character
+* Save Progress Midway
 * Story Interaction (through PM w/ dungeon master)
 * Dice Rolling
 * Battle System
