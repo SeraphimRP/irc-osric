@@ -1,6 +1,8 @@
 irc-osric
 =========
 
+[![Build Status](https://travis-ci.org/vypr/irc-osric.svg?branch=master)](https://travis-ci.org/vypr/irc-osric)
+
 Goal: Create an IRC bot that can effectively maintain an active OSRIC session.
 
 TODO:
