@@ -33,73 +33,68 @@ func stringInSlice(a string, list []string) bool {
 }
 
 func removeItemInSlice(a string, list []string) bool {
-    for _, b := range list {
-        if b == a {
-            b = " "
+    for c, d := range list {
+        if d == a {
+            list[c] = ""
             return true
         }
     }
     return false
 }
 
-func processMsg(nick string, msg string, conn *irc.Connection) {
-    // At some point, this will probably need refactoring.
-    if strings.HasPrefix(msg, ".set") && len(strings.Split(msg, " ")) == 5 {
+func findArguments(msg string) []string {
+    var args []string
+    var nmsg = strings.Split(msg, " ")
 
-        // thanks to jmbi (github.com/karlmcg) for helping me think
-        var arg1 = strings.Split(msg, " ")[1] // nick
-        var arg2 = strings.Split(msg, " ")[2] // category
-        var arg3 = strings.Split(msg, " ")[3] // stat/info
-        var arg4 = strings.Split(msg, " ")[4] // value
+    fmt.Println(nmsg)
 
-        if arg1 == " " || arg2 == " " || arg3 == " " || arg4 == " " {
-            conn.Privmsg(channel, "invalid setting")
-            return
+    for i, j := range nmsg {
+        if j != " " || i != 0 {
+            args[i - 1] = nmsg[i]
         }
+    }
 
+    return args
+}
+
+func fillCharmap(nick string, cat string, item string, val string) {
+    charmap = map[string]map[string]map[string]string { nick: map[string]map[string]string{ cat: map[string]string{ item: val, }, }, }
+}
+
+func handleMessage(nick string, msg string, conn *irc.Connection) {
+    var args = findArguments(msg)
+
+    if strings.HasPrefix(msg, ".set") && len(args) == 5 {
+        // thanks to jmbi (github.com/karlmcg) for helping me think
         if nick == dunmas {
-            charmap = map[string]map[string]map[string]string{ arg1: map[string]map[string]string{ arg2: map[string]string{ arg3: arg4, }, }, }
-            fmt.Println("[cmd] set - " + arg1 + "'s " + arg3  + "in " + arg2 + " is set to " + arg4 + ".")
+            fillCharmap(args[0], args[1], args[2], args[3])
+            fmt.Println("[cmd] set - " + args[0] + "'s " + args[2]  + "in " + args[1] + " is set to " + args[3] + ".")
         } else if stringInSlice(nick, admins) && !stringInSlice("nocharoverride", rulemod) {
-            charmap = map[string]map[string]map[string]string{ arg1: map[string]map[string]string{ arg2: map[string]string{ arg3: arg4, }, }, }
-            fmt.Println("[cmd] set - " + arg1 + "'s " + arg3 + " in " + arg2 + " is set to " + arg4 + ".")
+            fillCharmap(args[0], args[1], args[2], args[3])
+            fmt.Println("[cmd] set - " + args[0] + "'s " + args[2] + " in " + args[1] + " is set to " + args[3] + ".")
             conn.Privmsg(channel, nick + " used override, it's super effective!")
         }
-    } else if strings.HasPrefix(msg, ".print") && len(strings.Split(msg, " ")) == 4 {
-        var arg1 = strings.Split(msg, " ")[1] // nick
-        var arg2 = strings.Split(msg, " ")[2] // category
-        var arg3 = strings.Split(msg, " ")[3] // stat/info
-
-        if arg1 == " " || arg2 == " " || arg3 == " " {
-            conn.Privmsg(channel, "invalid setting")
-            return
+    } else if strings.HasPrefix(msg, ".print") && len(args) == 4 {
+        fmt.Println("[cmd] print - " + args[0] + "'s " + args[1] + " in " + args[3] + ".")
+        conn.Privmsg(channel, args[0] + "'s " + args[0] + " is set to " + charmap[args[0]][args[1]][args[2]] + ".")
+    } else if strings.HasPrefix(msg, ".mode") && len(args) == 2 {
+        if stringInSlice(args[0], rulemod) {
+            fmt.Println("[cmd] mode - change failed, already set to true")
+            conn.Privmsg(channel, args[0] + " is already set to true.")
+        } else {
+            fmt.Println("[cmd] mode " + args[0])
+            conn.Privmsg(channel, "set " + args[0] + " to true.")
         }
-
-        fmt.Println("[cmd] print - " + arg1 + "'s " + arg3 + " in " + arg2 + ".")
-        conn.Privmsg(channel, arg1 + "'s " + arg3 + " is set to " + charmap[arg1][arg2][arg3] + ".")
-    } else if strings.HasPrefix(msg, ".mode") && len(strings.Split(msg, " ")) == 2 {
-       if len(strings.Split(msg, " ")[1]) > 0 {
-            if stringInSlice(strings.Split(msg, " ")[1], rulemod) {
-                conn.Privmsg(channel, strings.Split(msg, " ")[1] + " is already set to true.")
-            } else {
-                fmt.Println("[cmd] mode " + strings.Split(msg, " ")[1])
-                conn.Privmsg(channel, "set " + strings.Split(msg, " ")[1] + " to true.")
-            }
-       }
-    } else if strings.HasPrefix(msg, ".rmmode") && len(strings.Split(msg, " ")) == 2 {
-        if len(strings.Split(msg, " ")[1]) > 0 {
-            if stringInSlice(strings.Split(msg, " ")[1], rulemod) {
-                if removeItemInSlice(strings.Split(msg, " ")[1], rulemod) {
-                    fmt.Println("[cmd] rmmode - " + strings.Split(msg, " ")[1])
-                    conn.Privmsg(channel, strings.Split(msg, " ")[1] + " has been removed from the list of modes.")
-                }
-            } else {
-                conn.Privmsg(channel, strings.Split(msg, " ")[1] + " isn't in the list of modes.")
-            }
+    } else if strings.HasPrefix(msg, ".rmmode") && len(args) == 2 {
+        if removeItemInSlice(args[0], rulemod) {
+            fmt.Println("[cmd] rmmode - " + args[0])
+            conn.Privmsg(channel, args[0] + " has been removed from the list of modes.")
+        } else {
+            conn.Privmsg(channel, args[0] + " isn't in the list of modes.")
         }
-    } else if strings.HasPrefix(msg, ".dm") && len(strings.Split(msg, " ")) == 2 {
-        if len(dunmas) == 0 && len(strings.Split(msg, " ")[1]) > 0 {
-            dunmas = strings.Split(msg, " ")[1]
+    } else if strings.HasPrefix(msg, ".dm") && len(args) == 2 {
+        if len(dunmas) == 0 {
+            dunmas = args[0]
             fmt.Println("[cmd] dm - " + dunmas)
             conn.Privmsg(channel, "dm is now set to " + dunmas)
         } else {
@@ -127,7 +122,7 @@ func main() {
     conn.AddCallback("001", func(e *irc.Event) { conn.Join(channel) })
 
     conn.AddCallback("PRIVMSG", func(e *irc.Event) {
-        processMsg(e.Nick, e.Message(), conn)
+        handleMessage(e.Nick, e.Message(), conn)
     })
 
     conn.Loop()
