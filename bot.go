@@ -18,7 +18,8 @@ var (
     admins = []string{"vypr"}
     dunmas = ""
 
-    rulemod = []string{"nocharoverride"}
+    rulemod = make([]string, len(modeopt))
+    modeopt = []string{"adminoverride", "saves", "logging"}
 
     charmap = make(map[string]map[string]map[string]string)
     monsmap = make(map[string]string)
@@ -43,13 +44,11 @@ func removeItemInSlice(a string, list []string) bool {
 }
 
 func findArguments(msg string) []string {
-    var args []string
+    var args = make([]string, len(strings.Split(msg, " ")) - 1) // thanks jmbi
     var nmsg = strings.Split(msg, " ")
 
-    fmt.Println(nmsg)
-
     for i, j := range nmsg {
-        if j != " " || i != 0 {
+        if j != " " && i != 0 {
             args[i - 1] = nmsg[i]
         }
     }
@@ -58,14 +57,14 @@ func findArguments(msg string) []string {
 }
 
 func fillCharmap(nick string, cat string, item string, val string) {
+    // thanks jmbi
     charmap = map[string]map[string]map[string]string { nick: map[string]map[string]string{ cat: map[string]string{ item: val, }, }, }
 }
 
 func handleMessage(nick string, msg string, conn *irc.Connection) {
     var args = findArguments(msg)
 
-    if strings.HasPrefix(msg, ".set") && len(args) == 5 {
-        // thanks to jmbi (github.com/karlmcg) for helping me think
+    if strings.HasPrefix(msg, ".set") && len(args) == 4 {
         if nick == dunmas {
             fillCharmap(args[0], args[1], args[2], args[3])
             fmt.Println("[cmd] set - " + args[0] + "'s " + args[2]  + "in " + args[1] + " is set to " + args[3] + ".")
@@ -74,25 +73,25 @@ func handleMessage(nick string, msg string, conn *irc.Connection) {
             fmt.Println("[cmd] set - " + args[0] + "'s " + args[2] + " in " + args[1] + " is set to " + args[3] + ".")
             conn.Privmsg(channel, nick + " used override, it's super effective!")
         }
-    } else if strings.HasPrefix(msg, ".print") && len(args) == 4 {
+    } else if strings.HasPrefix(msg, ".print") && len(args) == 3 {
         fmt.Println("[cmd] print - " + args[0] + "'s " + args[1] + " in " + args[3] + ".")
         conn.Privmsg(channel, args[0] + "'s " + args[0] + " is set to " + charmap[args[0]][args[1]][args[2]] + ".")
-    } else if strings.HasPrefix(msg, ".mode") && len(args) == 2 {
+    } else if strings.HasPrefix(msg, ".mode") && len(args) == 1 {
         if stringInSlice(args[0], rulemod) {
-            fmt.Println("[cmd] mode - change failed, already set to true")
+            fmt.Println("[cmd] mode - change to " + args[0] + " failed, already set to true")
             conn.Privmsg(channel, args[0] + " is already set to true.")
         } else {
-            fmt.Println("[cmd] mode " + args[0])
-            conn.Privmsg(channel, "set " + args[0] + " to true.")
+            fmt.Println("[cmd] mode - " + args[0])
+            conn.Privmsg(channel, args[0] + " is now enabled.")
         }
-    } else if strings.HasPrefix(msg, ".rmmode") && len(args) == 2 {
+    } else if strings.HasPrefix(msg, ".rmmode") && len(args) == 1 {
         if removeItemInSlice(args[0], rulemod) {
             fmt.Println("[cmd] rmmode - " + args[0])
             conn.Privmsg(channel, args[0] + " has been removed from the list of modes.")
         } else {
             conn.Privmsg(channel, args[0] + " isn't in the list of modes.")
         }
-    } else if strings.HasPrefix(msg, ".dm") && len(args) == 2 {
+    } else if strings.HasPrefix(msg, ".dm") && len(args) == 1 {
         if len(dunmas) == 0 {
             dunmas = args[0]
             fmt.Println("[cmd] dm - " + dunmas)
