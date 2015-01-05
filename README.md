@@ -11,7 +11,7 @@ TODO:
 * ~~Stat Manipulation~~
 * ~~Permission System~~
 * ~~Character System~~
-* Dictionary for abbreviations (hp, ap, algn, xp)
+* ~~Dictionary for abbreviations (hp, ap, algn, xp)~~
 * Import/Export Character
 * Save Progress Midway
 * Story Interaction (through PM w/ dungeon master)

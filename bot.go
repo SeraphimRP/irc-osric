@@ -25,6 +25,21 @@ var (
     monsmap = make(map[string]string)
 )
 
+var dict = map[string]string{
+    "hp": "health points",
+    "ap": "armour points",
+    "algn": "alignment",
+    "xp": "experience points",
+    "str": "strength",
+    "dex": "dexterity",
+    "wis": "wisdom",
+    "cha": "charisma",
+    "lvl": "level",
+    "hgt": "height",
+    "wgt": "weight",
+    "cls": "class",
+}
+
 func stringInSlice(a string, list []string) bool {
     // thanks stackoverflow
     for _, b := range list {
@@ -54,6 +69,19 @@ func findArguments(msg string) []string {
     }
 
     return args
+}
+
+func loadSheet(file string) {
+    // TODO: JSON character sheets.
+    // http://github.com/kirbyman62/osric-character-sheet-to-json
+}
+
+func exportSheet(nick string) {
+    // TODO
+}
+
+func save() {
+    // TODO
 }
 
 func fillCharmap(nick string, cat string, item string, val string) {
