@@ -92,6 +92,8 @@ func fillCharmap(nick string, cat string, item string, val string) {
 func handleMessage(nick string, msg string, conn *irc.Connection) {
     var args = findArguments(msg)
 
+    // TODO: Check if mode is enabled and if command can be applied.
+
     if strings.HasPrefix(msg, ".set") && len(args) == 4 {
         if nick == dunmas {
             fillCharmap(args[0], args[1], args[2], args[3])
