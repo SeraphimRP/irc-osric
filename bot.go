@@ -40,61 +40,18 @@ var dict = map[string]string{
     "cls": "class",
 }
 
-func (b *Bot) Say(msg string) {
-    b.Conn.Privmsg(b.Channel, msg)
-}
-
-func stringInSlice(a string, list []string) bool {
-    // thanks stackoverflow
-    for _, b := range list {
-        if b == a { return true }
-    }
-    return false
-}
-
-func removeItemInSlice(a string, list []string) bool {
-    for c, d := range list {
-        if d == a {
-            list[c] = ""
-            return true
-        }
-    }
-    return false
-}
-
-func findArguments(msg string) []string {
-    var args = make([]string, len(strings.Split(msg, " ")) - 1) // thanks jmbi
-    var nmsg = strings.Split(msg, " ")
-
-    for i, j := range nmsg {
-        if j != " " && i != 0 {
-            args[i - 1] = nmsg[i]
-        }
-    }
-
-    return args
-}
-
-func loadSheet(file string) {
-    // TODO: JSON character sheets.
-    // http://github.com/kirbyman62/osric-character-sheet-to-json
-}
-
-func exportSheet(nick string) {
-    // TODO
-}
-
-func save() {
-    // TODO
-}
-
 func fillCharmap(nick string, cat string, item string, val string) {
-    // thanks jmbi
     charmap = map[string]map[string]map[string]string { nick: map[string]map[string]string{ cat: map[string]string{ item: val, }, }, }
 }
 
 func (b *Bot) Command(nick string, msg string) {
-    var args = findArguments(msg)
+    var args = make([]string, len(strings.Split(msg, " ")) - 1)
+
+    for i, j := range strings.Split(msg, " ") {
+        if j != " " && i !=0 {
+            args[i - 1] = strings.Split(msg, " ")[i]
+        }
+    }
 
     // TODO: Check if mode is enabled and if command can be applied.
 
@@ -108,8 +65,8 @@ func (b *Bot) Command(nick string, msg string) {
             b.Say(nick + " used override, it's super effective!")
         }
     } else if strings.HasPrefix(msg, ".print") && len(args) == 3 {
-        fmt.Println("[cmd] print - " + args[0] + "'s " + args[1] + " in " + args[3] + ".")
-        b.Say(args[0] + "'s " + args[0] + " is set to " + charmap[args[0]][args[1]][args[2]] + ".")
+        fmt.Println("[cmd] print - " + args[0] + "'s " + args[2] + " in " + args[1] + ".")
+        b.Say(args[0] + "'s " + args[2] + " is set to " + charmap[args[0]][args[1]][args[2]] + ".")
     } else if strings.HasPrefix(msg, ".mode") && len(args) == 1 {
         if stringInSlice(args[0], rulemod) {
             fmt.Println("[cmd] mode - change to " + args[0] + " failed, already set to true")
@@ -141,6 +98,10 @@ func (b *Bot) Command(nick string, msg string) {
         fmt.Println("[cmd] shutdown from " + nick)
         os.Exit(1)
     }
+}
+
+func (b *Bot) Say(msg string) {
+    b.Conn.Privmsg(b.Channel, msg)
 }
 
 func (b *Bot) Listen() {

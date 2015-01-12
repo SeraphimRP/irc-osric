@@ -3,6 +3,8 @@ irc-osric
 
 [![Build Status](https://travis-ci.org/vypr/irc-osric.svg?branch=master)](https://travis-ci.org/vypr/irc-osric)
 
+Run with `go run bot.go slices.go`.
+
 Goal: Create an IRC bot that can effectively maintain an active OSRIC session.
 
 TODO:
