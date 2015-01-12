@@ -56,6 +56,7 @@ func (b *Bot) Command(nick string, msg string) {
     // TODO: Check if mode is enabled and if command can be applied.
 
     if strings.HasPrefix(msg, ".set") && len(args) == 4 {
+
         if nick == dunmas {
             fillCharmap(args[0], args[1], args[2], args[3])
             fmt.Println("[cmd] set - " + args[0] + "'s " + args[2]  + "in " + args[1] + " is set to " + args[3] + ".")
@@ -64,10 +65,14 @@ func (b *Bot) Command(nick string, msg string) {
             fmt.Println("[cmd] set - " + args[0] + "'s " + args[2] + " in " + args[1] + " is set to " + args[3] + ".")
             b.Say(nick + " used override, it's super effective!")
         }
+
     } else if strings.HasPrefix(msg, ".print") && len(args) == 3 {
+
         fmt.Println("[cmd] print - " + args[0] + "'s " + args[2] + " in " + args[1] + ".")
         b.Say(args[0] + "'s " + args[2] + " is set to " + charmap[args[0]][args[1]][args[2]] + ".")
+
     } else if strings.HasPrefix(msg, ".mode") && len(args) == 1 {
+
         if stringInSlice(args[0], rulemod) {
             fmt.Println("[cmd] mode - change to " + args[0] + " failed, already set to true")
             b.Say(args[0] + " is already set to true.")
@@ -75,14 +80,18 @@ func (b *Bot) Command(nick string, msg string) {
             fmt.Println("[cmd] mode - " + args[0])
             b.Say(args[0] + " is now enabled.")
         }
+
     } else if strings.HasPrefix(msg, ".rmmode") && len(args) == 1 {
+
         if removeItemInSlice(args[0], rulemod) {
             fmt.Println("[cmd] rmmode - " + args[0])
             b.Say(args[0] + " has been removed from the list of modes.")
         } else {
             b.Say(args[0] + " isn't in the list of modes.")
         }
+
     } else if strings.HasPrefix(msg, ".dm") && len(args) == 1 {
+
         if len(dunmas) == 0 {
             dunmas = args[0]
             fmt.Println("[cmd] dm - " + dunmas)
@@ -90,13 +99,18 @@ func (b *Bot) Command(nick string, msg string) {
         } else {
             b.Say("dm has already been set, the current DM is " + dunmas)
         }
+
     } else if msg == ".resetdm" && (nick == dunmas || stringInSlice(nick, admins)) {
+
         dunmas = ""
         fmt.Println("[cmd] resetdm")
         b.Say("dm has been reset")
+
     } else if msg == ".quit" && stringInSlice(nick, admins) {
+
         fmt.Println("[cmd] shutdown from " + nick)
         os.Exit(1)
+
     }
 }
 
