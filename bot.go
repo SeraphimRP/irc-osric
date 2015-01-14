@@ -40,6 +40,15 @@ var dict = map[string]string{
     "cls": "class",
 }
 
+var argmap = map[string]int{
+    ".set": 4,
+    ".print": 3,
+    ".mode": 1,
+    ".rmmode": 1,
+    ".dm": 1,
+    ".resetdm": 1,
+}
+
 func fillCharmap(nick string, cat string, item string, val string) {
     charmap = map[string]map[string]map[string]string { nick: map[string]map[string]string{ cat: map[string]string{ item: val, }, }, }
 }
@@ -53,9 +62,13 @@ func (b *Bot) Command(nick string, msg string) {
         }
     }
 
+    if argmap[strings.Split(msg, " ")[0]] != 1 { return }
+    if argmap[strings.Split(msg, " ")[0]] != len(args) { return }
+
+    fmt.Println("hi");
     // TODO: Check if mode is enabled and if command can be applied.
 
-    if strings.HasPrefix(msg, ".set") && len(args) == 4 {
+    if strings.HasPrefix(msg, ".set") {
 
         if nick == dunmas {
             fillCharmap(args[0], args[1], args[2], args[3])
