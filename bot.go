@@ -20,6 +20,8 @@ var (
 
 	rulemod = make([]string, len(modeopt))
 	modeopt = []string{"adminoverride", "saves", "logging"}
+	logging = false
+	initLog = true
 
 	charmap = make(map[string]map[string]map[string]string)
 	monsmap = make(map[string]string)
@@ -64,6 +66,17 @@ func (b *Bot) Command(nick string, msg string) {
 	var args = make([]string, len(strings.Split(msg, " "))-1)
 	var command = ""
 
+	if stringInSlice("logging", rulemod) {
+		logging = true
+	} else {
+		logging = false
+	}
+
+	if logging {
+		b.Log(nick+": "+msg, initLog)
+		initLog = false
+	}
+
 	for i, j := range strings.Split(msg, " ") {
 		if j != " " && i != 0 {
 			args[i-1] = strings.Split(msg, " ")[i]
@@ -96,8 +109,12 @@ func (b *Bot) Command(nick string, msg string) {
 		break
 
 	case ".print":
-		fmt.Println("[cmd] print - " + args[0] + "'s " + args[2] + " in " + args[1])
-		b.Say(args[0] + "'s " + args[2] + " is set to " + charmap[args[0]][args[1]][args[2]])
+		if len(charmap[args[0]][args[1]][args[2]]) == 0 {
+			b.Say("there is no setting for " + args[0] + "'s " + args[2])
+		} else {
+			fmt.Println("[cmd] print - " + args[0] + "'s " + args[2] + " in " + args[1])
+			b.Say(args[0] + "'s " + args[2] + " is set to " + charmap[args[0]][args[1]][args[2]])
+		}
 		break
 
 	case ".mode":
@@ -146,7 +163,36 @@ func (b *Bot) Command(nick string, msg string) {
 	}
 }
 
+func (b *Bot) Log(line string, initLog bool) {
+	if initLog {
+		os.Remove("log.txt")
+		os.Create("log.txt")
+
+		file, fileerr := os.OpenFile("log.txt", os.O_RDWR|os.O_APPEND, 0660)
+
+		if fileerr != nil {
+			panic(fileerr)
+		}
+
+		file.WriteString("IRC-OSRIC by Elliott Pardee (vypr)\n")
+		file.WriteString("----------------------------------\n\n")
+		file.WriteString(line + "\n")
+	} else {
+		file, fileerr := os.OpenFile("log.txt", os.O_RDWR|os.O_APPEND, 0660)
+
+		if fileerr != nil {
+			panic(fileerr)
+		}
+
+		file.WriteString(line + "\n")
+	}
+}
+
 func (b *Bot) Say(msg string) {
+	if logging {
+		b.Log("bot: "+msg, initLog)
+	}
+
 	b.Conn.Privmsg(b.Channel, msg)
 }
 
