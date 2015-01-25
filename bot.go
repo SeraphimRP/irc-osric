@@ -5,6 +5,7 @@ import (
 	"github.com/thoj/go-ircevent"
 	"os"
 	"strings"
+    "time"
 )
 
 type Bot struct {
@@ -20,11 +21,12 @@ var (
 
 	rulemod = make([]string, len(modeopt))
 	modeopt = []string{"adminoverride", "saves", "logging"}
-	logging = false
 	initLog = true
 
 	charmap = make(map[string]map[string]map[string]string)
 	monsmap = make(map[string]string)
+
+    filename = "log_" + time.Now().Local().Format("20060102") + "_" + time.Now().Local().Format("150405") + ".txt"
 )
 
 var dict = map[string]string{
@@ -62,24 +64,20 @@ func fillCharmap(nick string, cat string, item string, val string) {
 	}
 }
 
+// TODO: Create functions related to character import/export.
+
 func (b *Bot) Command(nick string, msg string) {
 	var args = make([]string, len(strings.Split(msg, " "))-1)
 	var command = ""
 
-	if stringInSlice("logging", rulemod) {
-		logging = true
-	} else {
-		logging = false
-	}
-
-	if logging {
-		b.Log(nick+": "+msg, initLog)
-		initLog = false
-	}
+	if stringInSlice(modeopt[2], rulemod) {
+		b.Log(nick + ": " + msg, initLog)
+	    initLog = false
+    }
 
 	for i, j := range strings.Split(msg, " ") {
 		if j != " " && i != 0 {
-			args[i-1] = strings.Split(msg, " ")[i]
+			args[i - 1] = strings.Split(msg, " ")[i]
 		}
 	}
 
@@ -94,14 +92,12 @@ func (b *Bot) Command(nick string, msg string) {
 		return
 	}
 
-	// TODO: Check if mode is enabled and if command can be applied.
-
 	switch command {
 	case ".set":
 		if nick == dunmas {
 			fillCharmap(args[0], args[1], args[2], args[3])
 			fmt.Println("[cmd] set - " + args[0] + "'s " + args[2] + "in " + args[1] + " is set to " + args[3])
-		} else if stringInSlice(nick, admins) && !stringInSlice("adminoverride", rulemod) {
+		} else if stringInSlice(nick, admins) && !stringInSlice(modeopt[0], rulemod) {
 			fillCharmap(args[0], args[1], args[2], args[3])
 			fmt.Println("[cmd] set - " + args[0] + "'s " + args[2] + " in " + args[1] + " is set to " + args[3])
 			b.Say(nick + " used override, it's super effective!")
@@ -164,11 +160,10 @@ func (b *Bot) Command(nick string, msg string) {
 }
 
 func (b *Bot) Log(line string, initLog bool) {
-	if initLog {
-		os.Remove("log.txt")
-		os.Create("log.txt")
+    if initLog {
+		os.Create(filename)
 
-		file, fileerr := os.OpenFile("log.txt", os.O_RDWR|os.O_APPEND, 0660)
+		file, fileerr := os.OpenFile(filename, os.O_RDWR|os.O_APPEND, 0660)
 
 		if fileerr != nil {
 			panic(fileerr)
@@ -178,7 +173,7 @@ func (b *Bot) Log(line string, initLog bool) {
 		file.WriteString("----------------------------------\n\n")
 		file.WriteString(line + "\n")
 	} else {
-		file, fileerr := os.OpenFile("log.txt", os.O_RDWR|os.O_APPEND, 0660)
+		file, fileerr := os.OpenFile(filename, os.O_RDWR|os.O_APPEND, 0660)
 
 		if fileerr != nil {
 			panic(fileerr)
@@ -189,8 +184,8 @@ func (b *Bot) Log(line string, initLog bool) {
 }
 
 func (b *Bot) Say(msg string) {
-	if logging {
-		b.Log("bot: "+msg, initLog)
+	if stringInSlice(modeopt[2], rulemod) {
+		b.Log("bot: " + msg, initLog)
 	}
 
 	b.Conn.Privmsg(b.Channel, msg)
