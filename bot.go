@@ -16,7 +16,7 @@ type Bot struct {
 }
 
 var (
-	admins = []string{"vypr"}
+	admins = []string{"vypr", "bajr"}
 	dunmas = ""
 
 	rulemod = make([]string, len(modeopt))
