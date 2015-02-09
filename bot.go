@@ -6,6 +6,8 @@ import (
 	"os"
 	"strings"
     "time"
+    "math/rand"
+    "strconv"
 )
 
 type Bot struct {
@@ -26,7 +28,7 @@ var (
 	charmap = make(map[string]map[string]map[string]string)
 	monsmap = make(map[string]string)
 
-    filename = "log_" + time.Now().Local().Format("20060102") + "_" + time.Now().Local().Format("150405") + ".txt"
+    filename = "log/log_" + time.Now().Local().Format("20060102") + "_" + time.Now().Local().Format("150405") + ".txt"
 )
 
 var dict = map[string]string{
@@ -48,6 +50,7 @@ var dict = map[string]string{
 var argmap = map[string]int{
 	".set":     4,
 	".print":   3,
+    ".die":     2,
 	".mode":    1,
 	".rmmode":  1,
 	".dm":      1,
@@ -63,6 +66,25 @@ func fillCharmap(nick string, cat string, item string, val string) {
 			},
 		},
 	}
+}
+
+func die(side int, amount int) {
+    // TODO: Works, just not correctly.
+    var numbers = make([]int, amount + 1)
+    var tmpnum = make([]int, amount)
+
+    for i := 0; i < amount; i++ {
+        r1 := rand.NewSource(0)
+        r2 := rand.New(r1)
+        number := r2.Intn(side)
+        numbers[i] = number
+
+        if amount > i {
+            tmpnum[i] = numbers[i + 1] + number
+        }
+
+        fmt.Println(tmpnum[i])
+    }
 }
 
 // TODO: Create functions related to character import/export.
@@ -114,7 +136,13 @@ func (b *Bot) Command(nick string, msg string) {
 		}
 		break
 
-	case ".mode":
+	case ".die":
+        arg1, _ := strconv.Atoi(args[0])
+        arg2, _ := strconv.Atoi(args[1])
+        die(arg1, arg2)
+        break
+
+    case ".mode":
 		if stringInSlice(args[0], rulemod) {
 			b.Say(args[0] + " is already set to true")
 		} else if stringInSlice(args[0], modeopt) {
