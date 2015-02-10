@@ -142,7 +142,7 @@ func (b *Bot) Command(nick string, msg string) {
         amount, _ := strconv.Atoi(strings.Split(args[0], "d")[0])
         side, _ := strconv.Atoi(strings.Split(args[0], "d")[1])
 
-        if stringInSlice(strconv.Itoa(side), dieopt) && amount > 0 && amount <= 20 {
+        if stringInSlice(strconv.Itoa(side), dieopt) && len(strings.Split(args[0], "d")) < 3 && amount > 0 && amount <= 20 {
             fmt.Println("[cmd] rolling " + args[0])
             b.Say(nick + " rolled a " + strconv.Itoa(roll(amount, side)))
         }
