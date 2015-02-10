@@ -55,7 +55,7 @@ var argmap = map[string]int{
 	".mode":    1,
 	".rmmode":  1,
 	".dm":      1,
-	".resetdm": 1,
+	".resetdm": 0,
 	".quit":    0,
 }
 
@@ -178,10 +178,15 @@ func (b *Bot) Command(nick string, msg string) {
 		break
 
 	case ".resetdm":
-		if nick == dunmas || stringInSlice(nick, admins) {
+		if nick == dunmas {
 			dunmas = ""
 			fmt.Println("[cmd] resetdm")
 			b.Say("dm has been reset")
+		} else if stringInSlice(nick, admins) && !stringInSlice(modeopt[0], rulemod) {
+			dunmas = ""
+			fmt.Println("[cmd] resetdm")
+			b.Say("dm has been reset")
+			b.Say(nick + " used override, it's super effective!")
 		}
 		break
 
