@@ -18,8 +18,9 @@ type Bot struct {
 }
 
 var (
-	admins = []string{"vypr", "bajr"}
-	dunmas = ""
+	admins = []string{"vypr", "bajr", "kirby"}
+	dieopt = []string{"4", "6", "8", "10", "12", "20"}
+    dunmas = ""
 
 	rulemod = make([]string, len(modeopt))
 	modeopt = []string{"adminoverride", "saves", "logging"}
@@ -50,7 +51,7 @@ var dict = map[string]string{
 var argmap = map[string]int{
 	".set":     4,
 	".print":   3,
-    ".die":     2,
+    ".roll":     1,
 	".mode":    1,
 	".rmmode":  1,
 	".dm":      1,
@@ -68,29 +69,30 @@ func fillCharmap(nick string, cat string, item string, val string) {
 	}
 }
 
-func die(side int, amount int) {
-    // TODO: Works, just not correctly.
-    var numbers = make([]int, amount + 1)
-    var tmpnum = make([]int, amount)
+func roll(amount int, side int) int {
+    var numbers = make([]int, amount)
+    var finaln = 0;
 
     for i := 0; i < amount; i++ {
-        r1 := rand.NewSource(0)
-        r2 := rand.New(r1)
-        number := r2.Intn(side)
+        number := rand.Intn(side) + 1
         numbers[i] = number
+    }
 
-        if amount > i {
-            tmpnum[i] = numbers[i + 1] + number
+    for i := 0; i < len(numbers); i++ {
+        if i == len(numbers) {
+            return finaln
         }
 
-        fmt.Println(tmpnum[i])
+        finaln = finaln + numbers[i]
     }
+
+    return finaln
 }
 
 // TODO: Create functions related to character import/export.
 
 func (b *Bot) Command(nick string, msg string) {
-	var args = make([]string, len(strings.Split(msg, " "))-1)
+	var args = make([]string, len(strings.Split(msg, " ")) -1)
 	var command = ""
 
 	if stringInSlice(modeopt[2], rulemod) {
@@ -136,10 +138,14 @@ func (b *Bot) Command(nick string, msg string) {
 		}
 		break
 
-	case ".die":
-        arg1, _ := strconv.Atoi(args[0])
-        arg2, _ := strconv.Atoi(args[1])
-        die(arg1, arg2)
+	case ".roll":
+        amount, _ := strconv.Atoi(strings.Split(args[0], "d")[0])
+        side, _ := strconv.Atoi(strings.Split(args[0], "d")[1])
+
+        if stringInSlice(strconv.Itoa(side), dieopt) && amount > 0 && amount <= 20 {
+            fmt.Println("[cmd] rolling " + args[0])
+            b.Say(nick + " rolled a " + strconv.Itoa(roll(amount, side)))
+        }
         break
 
     case ".mode":
