@@ -16,7 +16,5 @@ TODO:
 * ~~Dictionary for abbreviations (hp, ap, algn, xp)~~
 * Import/Export Character
 * Save Progress Midway
-* Story Interaction (through PM w/ dungeon master)
-* Dice Rolling
+* ~~Dice Rolling~~
 * Battle System
-* Rule System
