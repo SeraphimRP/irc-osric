@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/thoj/go-ircevent"
+	"math/rand"
 	"os"
+	"strconv"
 	"strings"
-    "time"
-    "math/rand"
-    "strconv"
+	"time"
 )
 
 type Bot struct {
@@ -20,7 +20,7 @@ type Bot struct {
 var (
 	admins = []string{"vypr", "bajr", "kirby"}
 	dieopt = []string{"4", "6", "8", "10", "12", "20"}
-    dunmas = ""
+	dunmas = ""
 
 	rulemod = make([]string, len(modeopt))
 	modeopt = []string{"adminoverride", "saves", "logging"}
@@ -29,7 +29,7 @@ var (
 	charmap = make(map[string]map[string]map[string]string)
 	monsmap = make(map[string]string)
 
-    filename = "log/log_" + time.Now().Local().Format("20060102") + "_" + time.Now().Local().Format("150405") + ".txt"
+	filename = "log/log_" + time.Now().Local().Format("20060102") + "_" + time.Now().Local().Format("150405") + ".txt"
 )
 
 var dict = map[string]string{
@@ -39,7 +39,7 @@ var dict = map[string]string{
 	"xp":   "experience points",
 	"str":  "strength",
 	"con":  "constitution",
-    "dex":  "dexterity",
+	"dex":  "dexterity",
 	"wis":  "wisdom",
 	"cha":  "charisma",
 	"lvl":  "level",
@@ -51,7 +51,7 @@ var dict = map[string]string{
 var argmap = map[string]int{
 	".set":     4,
 	".print":   3,
-    ".roll":     1,
+	".d":       1,
 	".mode":    1,
 	".rmmode":  1,
 	".dm":      1,
@@ -70,39 +70,39 @@ func fillCharmap(nick string, cat string, item string, val string) {
 }
 
 func roll(amount int, side int) int {
-    var numbers = make([]int, amount)
-    var finaln = 0;
+	var numbers = make([]int, amount)
+	var finaln = 0
 
-    for i := 0; i < amount; i++ {
-        number := rand.Intn(side) + 1
-        numbers[i] = number
-    }
+	for i := 0; i < amount; i++ {
+		number := rand.Intn(side) + 1
+		numbers[i] = number
+	}
 
-    for i := 0; i < len(numbers); i++ {
-        if i == len(numbers) {
-            return finaln
-        }
+	for i := 0; i < len(numbers); i++ {
+		if i == len(numbers) {
+			return finaln
+		}
 
-        finaln = finaln + numbers[i]
-    }
+		finaln = finaln + numbers[i]
+	}
 
-    return finaln
+	return finaln
 }
 
 // TODO: Create functions related to character import/export.
 
 func (b *Bot) Command(nick string, msg string) {
-	var args = make([]string, len(strings.Split(msg, " ")) -1)
+	var args = make([]string, len(strings.Split(msg, " "))-1)
 	var command = ""
 
 	if stringInSlice(modeopt[2], rulemod) {
-		b.Log(nick + ": " + msg, initLog)
-	    initLog = false
-    }
+		b.Log(nick+": "+msg, initLog)
+		initLog = false
+	}
 
 	for i, j := range strings.Split(msg, " ") {
 		if j != " " && i != 0 {
-			args[i - 1] = strings.Split(msg, " ")[i]
+			args[i-1] = strings.Split(msg, " ")[i]
 		}
 	}
 
@@ -138,17 +138,17 @@ func (b *Bot) Command(nick string, msg string) {
 		}
 		break
 
-	case ".roll":
-        amount, _ := strconv.Atoi(strings.Split(args[0], "d")[0])
-        side, _ := strconv.Atoi(strings.Split(args[0], "d")[1])
+	case ".d":
+		amount, _ := strconv.Atoi(strings.Split(args[0], "d")[0])
+		side, _ := strconv.Atoi(strings.Split(args[0], "d")[1])
 
-        if stringInSlice(strconv.Itoa(side), dieopt) && len(strings.Split(args[0], "d")) < 3 && amount > 0 && amount <= 20 {
-            fmt.Println("[cmd] rolling " + args[0])
-            b.Say(nick + " rolled a " + strconv.Itoa(roll(amount, side)))
-        }
-        break
+		if stringInSlice(strconv.Itoa(side), dieopt) && len(strings.Split(args[0], "d")) < 3 && amount > 0 && amount <= 20 {
+			fmt.Println("[cmd] rolling " + args[0])
+			b.Say(nick + " rolled a " + strconv.Itoa(roll(amount, side)))
+		}
+		break
 
-    case ".mode":
+	case ".mode":
 		if stringInSlice(args[0], rulemod) {
 			b.Say(args[0] + " is already set to true")
 		} else if stringInSlice(args[0], modeopt) {
@@ -195,7 +195,7 @@ func (b *Bot) Command(nick string, msg string) {
 }
 
 func (b *Bot) Log(line string, initLog bool) {
-    if initLog {
+	if initLog {
 		os.Create(filename)
 
 		file, fileerr := os.OpenFile(filename, os.O_RDWR|os.O_APPEND, 0660)
@@ -220,7 +220,7 @@ func (b *Bot) Log(line string, initLog bool) {
 
 func (b *Bot) Say(msg string) {
 	if stringInSlice(modeopt[2], rulemod) {
-		b.Log("bot: " + msg, initLog)
+		b.Log("bot: "+msg, initLog)
 	}
 
 	b.Conn.Privmsg(b.Channel, msg)
