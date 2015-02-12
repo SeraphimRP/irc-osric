@@ -14,7 +14,8 @@ TODO:
 * ~~Permission System~~
 * ~~Character System~~
 * ~~Dictionary for abbreviations (hp, ap, algn, xp)~~
+* ~~Dice System~~
+* ~~Voting System~~
 * Import/Export Character
 * Save Progress Midway
-* ~~Dice Rolling~~
 * Battle System

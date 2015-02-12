@@ -1,3 +1,4 @@
+// extra slice functions by vypr
 package main
 
 func stringInSlice(a string, list []string) bool {

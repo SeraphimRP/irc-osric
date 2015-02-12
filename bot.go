@@ -22,12 +22,13 @@ var (
 	dieopt = []string{"4", "6", "8", "10", "12", "20"}
 	dunmas = ""
 
-	rulemod = make([]string, len(modeopt))
-	modeopt = []string{"adminoverride", "saves", "logging"}
+	rulemod = []string{"voting"}
+	modeopt = []string{"adminoverride", "saves", "logging", "voting"}
 	initLog = true
 
 	charmap = make(map[string]map[string]map[string]string)
 	monsmap = make(map[string]string)
+	votemap = make(map[string]int)
 
 	filename = "log/log_" + time.Now().Local().Format("20060102") + "_" + time.Now().Local().Format("150405") + ".txt"
 )
@@ -51,10 +52,12 @@ var dict = map[string]string{
 var argmap = map[string]int{
 	".set":     4,
 	".print":   3,
+	".vote":    1,
 	".d":       1,
 	".mode":    1,
 	".rmmode":  1,
 	".dm":      1,
+	".choose":  0,
 	".resetdm": 0,
 	".quit":    0,
 }
@@ -87,6 +90,20 @@ func roll(amount int, side int) int {
 	}
 
 	return finaln
+}
+
+func vote(nick string) {
+	if _, j := votemap[nick]; j {
+		var tmp = votemap[nick] + 1
+		votemap[nick] = tmp
+	} else {
+		votemap[nick] = 1
+	}
+}
+
+func choose() (string, int) {
+	nmap := sortMapByValue(votemap)
+	return nmap[0].Key, nmap[0].Value
 }
 
 // TODO: Create functions related to character import/export.
@@ -122,7 +139,7 @@ func (b *Bot) Command(nick string, msg string) {
 		if nick == dunmas {
 			fillCharmap(args[0], args[1], args[2], args[3])
 			fmt.Println("[cmd] set - " + args[0] + "'s " + args[2] + "in " + args[1] + " is set to " + args[3])
-		} else if stringInSlice(nick, admins) && !stringInSlice(modeopt[0], rulemod) {
+		} else if stringInSlice(nick, admins) && stringInSlice(modeopt[0], rulemod) {
 			fillCharmap(args[0], args[1], args[2], args[3])
 			fmt.Println("[cmd] set - " + args[0] + "'s " + args[2] + " in " + args[1] + " is set to " + args[3])
 			b.Say(nick + " used override, it's super effective!")
@@ -138,6 +155,16 @@ func (b *Bot) Command(nick string, msg string) {
 		}
 		break
 
+	case ".vote":
+		if stringInSlice(modeopt[3], rulemod) {
+			vote(args[0])
+			fmt.Println("[cmd] vote - " + args[0])
+		} else {
+			b.Say(nick + " - the dm has already been chosen")
+			b.Say(nick + " - have the dm or an admin use .resetdm if necessary")
+		}
+		break
+
 	case ".d":
 		amount, _ := strconv.Atoi(strings.Split(args[0], "d")[0])
 		side, _ := strconv.Atoi(strings.Split(args[0], "d")[1])
@@ -149,31 +176,47 @@ func (b *Bot) Command(nick string, msg string) {
 		break
 
 	case ".mode":
-		if stringInSlice(args[0], rulemod) {
-			b.Say(args[0] + " is already set to true")
-		} else if stringInSlice(args[0], modeopt) {
-			fmt.Println("[cmd] mode - " + args[0])
-			b.Say(args[0] + " is now enabled")
-			rulemod = append(rulemod, args[0])
+		if nick == dunmas || stringInSlice(nick, admins) {
+			if stringInSlice(args[0], rulemod) {
+				b.Say(args[0] + " is already set to true")
+			} else if stringInSlice(args[0], modeopt) {
+				fmt.Println("[cmd] mode - " + args[0])
+				b.Say(args[0] + " is now enabled")
+				rulemod = append(rulemod, args[0])
+			}
 		}
 		break
 
 	case ".rmmode":
-		if removeItemInSlice(args[0], rulemod) {
-			fmt.Println("[cmd] rmmode - " + args[0])
-			b.Say(args[0] + " has been removed from the list of modes")
-		} else {
-			b.Say(args[0] + " isn't in the list of modes")
+		if nick == dunmas || stringInSlice(nick, admins) {
+			if removeItemInSlice(args[0], rulemod) {
+				fmt.Println("[cmd] rmmode - " + args[0])
+				b.Say(args[0] + " has been removed from the list of modes")
+			} else {
+				b.Say(args[0] + " isn't in the list of modes")
+			}
 		}
 		break
 
 	case ".dm":
-		if len(dunmas) == 0 {
+		if stringInSlice(nick, admins) && stringInSlice(modeopt[0], rulemod) {
 			dunmas = args[0]
 			fmt.Println("[cmd] dm - " + dunmas)
 			b.Say("dm is now set to " + dunmas)
-		} else {
-			b.Say("dm has already been set, the current DM is " + dunmas)
+		}
+		break
+
+	case ".choose":
+		var val = 0
+
+		if stringInSlice(modeopt[3], rulemod) {
+			dunmas, val = choose()
+			fmt.Println("[cmd] choosing " + dunmas + " as dm")
+			b.Say("the dm is now " + dunmas + " after " + strconv.Itoa(val) + " vote(s)")
+
+			if removeItemInSlice(modeopt[3], rulemod) {
+				b.Say("voting is now disabled")
+			}
 		}
 		break
 
@@ -182,7 +225,7 @@ func (b *Bot) Command(nick string, msg string) {
 			dunmas = ""
 			fmt.Println("[cmd] resetdm")
 			b.Say("dm has been reset")
-		} else if stringInSlice(nick, admins) && !stringInSlice(modeopt[0], rulemod) {
+		} else if stringInSlice(nick, admins) && stringInSlice(modeopt[0], rulemod) {
 			dunmas = ""
 			fmt.Println("[cmd] resetdm")
 			b.Say("dm has been reset")
