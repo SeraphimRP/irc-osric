@@ -26,8 +26,6 @@ var (
 	modeopt = []string{"adminoverride", "saves", "logging", "voting"}
 	initLog = true
 
-	charmap = make(map[string]map[string]map[string]string)
-	monsmap = make(map[string]string)
 	votemap = make(map[string]int)
 
 	filename = "log/log_" + time.Now().Local().Format("20060102") + "_" + time.Now().Local().Format("150405") + ".txt"
@@ -50,26 +48,16 @@ var dict = map[string]string{
 }
 
 var argmap = map[string]int{
-	".set":     4,
 	".print":   3,
 	".vote":    1,
 	".d":       1,
 	".mode":    1,
 	".rmmode":  1,
 	".dm":      1,
+	".import":  1,
 	".choose":  0,
 	".resetdm": 0,
 	".quit":    0,
-}
-
-func fillCharmap(nick string, cat string, item string, val string) {
-	charmap = map[string]map[string]map[string]string{
-		nick: map[string]map[string]string{
-			cat: map[string]string{
-				item: val,
-			},
-		},
-	}
 }
 
 func roll(amount int, side int) int {
@@ -135,23 +123,19 @@ func (b *Bot) Command(nick string, msg string) {
 	}
 
 	switch command {
-	case ".set":
-		if nick == dunmas {
-			fillCharmap(args[0], args[1], args[2], args[3])
-			fmt.Println("[cmd] set - " + args[0] + "'s " + args[2] + "in " + args[1] + " is set to " + args[3])
-		} else if stringInSlice(nick, admins) && stringInSlice(modeopt[0], rulemod) {
-			fillCharmap(args[0], args[1], args[2], args[3])
-			fmt.Println("[cmd] set - " + args[0] + "'s " + args[2] + " in " + args[1] + " is set to " + args[3])
-			b.Say(nick + " used override, it's super effective!")
+	case ".import":
+		if importChar(args[0]) {
+			b.Say("importing " + args[0] + " successful")
+			fmt.Println("[cmd] import " + args[0])
 		}
-		break
 
 	case ".print":
-		if len(charmap[args[0]][args[1]][args[2]]) == 0 {
-			b.Say("there is no setting for " + args[0] + "'s " + args[2])
+		if len(args) == 4 {
+			b.Say(args[0] + "[" + args[3] + "] = " + printChar(args[0], args[1], args[2], args[3]))
+			fmt.Println("[cmd] print")
 		} else {
-			fmt.Println("[cmd] print - " + args[0] + "'s " + args[2] + " in " + args[1])
-			b.Say(args[0] + "'s " + args[2] + " is set to " + charmap[args[0]][args[1]][args[2]])
+			b.Say(args[0] + "[" + args[2] + "] = " + printChar(args[0], args[1], "nil", args[2]))
+			fmt.Println("[cmd] print")
 		}
 		break
 
@@ -221,15 +205,25 @@ func (b *Bot) Command(nick string, msg string) {
 		break
 
 	case ".resetdm":
-		if nick == dunmas {
+		if nick == dunmas && len(dunmas) > 0 {
 			dunmas = ""
 			fmt.Println("[cmd] resetdm")
 			b.Say("dm has been reset")
-		} else if stringInSlice(nick, admins) && stringInSlice(modeopt[0], rulemod) {
+
+			if stringInSlice(modeopt[3], rulemod) {
+				rulemod = append(rulemod, modeopt[3])
+				b.Say("voting is now enabled")
+			}
+		} else if stringInSlice(nick, admins) && stringInSlice(modeopt[0], rulemod) && len(dunmas) > 0 {
 			dunmas = ""
 			fmt.Println("[cmd] resetdm")
 			b.Say("dm has been reset")
 			b.Say(nick + " used override, it's super effective!")
+
+			if stringInSlice(modeopt[3], rulemod) {
+				rulemod = append(rulemod, modeopt[3])
+				b.Say("voting is now enabled")
+			}
 		}
 		break
 
