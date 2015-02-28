@@ -10,6 +10,12 @@ Goal: Create an IRC bot that can effectively maintain an active OSRIC session.
 Compatible with JSON character sheets generated with @kirbyUK's [osric-cgi](https://github.com/kirbyUK/osric-cgi) and OSRIC v1.
 
 
+KNOWN ISSUES:
+
+* Arrays in the JSON sheet cannot be printed or written to.
+* Some unnecessary stuff in code, like the save mode that wasn't made.
+
+
 TODO:
 
 * ~~Logging~~
