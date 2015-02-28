@@ -4,7 +4,9 @@ package main
 import (
 	"github.com/antonholmquist/jason"
 	"io/ioutil"
+	"os"
 	"strconv"
+	"strings"
 )
 
 var charmap map[string]*jason.Object
@@ -25,12 +27,10 @@ func importChar(nick string) bool {
 	return true
 }
 
-func exportChar(nick string) {
-	// TODO
-}
-
 func printChar(nick string, cat string, scat string, item string) string {
-	// TODO: Checking if nick exists, to prevent crashing the bot.
+	if _, err := os.Stat("json/" + nick + ".json"); os.IsNotExist(err) {
+		return "does not exist"
+	}
 
 	if scat == "nil" {
 		test, _ := charmap[nick].GetString(cat, item)
@@ -57,4 +57,49 @@ func printChar(nick string, cat string, scat string, item string) string {
 
 		return "does not exist"
 	}
+}
+
+func setChar(nick string, cat string, scat string, item string, value string) bool {
+	file, err := ioutil.ReadFile("json/" + nick + ".json")
+
+	if err != nil {
+		return false
+	}
+
+	lines := strings.Split(string(file), "\n")
+
+	for i, l := range lines {
+		if strings.Contains(l, item) {
+			if scat == "nil" {
+				test, _ := charmap[nick].GetString(cat, item)
+
+				if len(test) == 0 {
+					lines[i] = "\"" + item + "\": " + value + ","
+				} else {
+					lines[i] = "\"" + item + "\": \"" + value + "\","
+				}
+			} else {
+				test, _ := charmap[nick].GetString(cat, scat, item)
+
+				if len(test) == 0 {
+					lines[i] = "\"" + item + "\": " + value + ","
+				} else {
+					lines[i] = "\"" + item + "\": \"" + value + "\","
+				}
+			}
+		}
+	}
+
+	oput := strings.Join(lines, "\n")
+	err = ioutil.WriteFile("json/"+nick+".json", []byte(oput), 0644)
+
+	if err != nil {
+		return false
+	}
+
+	if !importChar(nick) {
+		return false
+	}
+
+	return true
 }

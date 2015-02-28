@@ -15,9 +15,8 @@ TODO:
 * ~~Dictionary for abbreviations (hp, ap, algn, xp)~~
 * ~~Dice System~~
 * ~~Voting System~~
-* Save Progress Midway
-* Character System
+* ~~Character System~~
   * ~~Importing Characters~~
   * ~~Reading (printing) Character Info~~
-  * Writing Character Info
-  * Exporting Characters
+  * ~~Writing Character Info~~
+  * ~~Exporting Characters~~

@@ -48,6 +48,7 @@ var dict = map[string]string{
 }
 
 var argmap = map[string]int{
+	".set":     4,
 	".print":   3,
 	".vote":    1,
 	".d":       1,
@@ -129,6 +130,30 @@ func (b *Bot) Command(nick string, msg string) {
 			fmt.Println("[cmd] import " + args[0])
 		}
 
+	case ".set":
+		if nick == dunmas {
+			if len(args) == 5 {
+				if setChar(args[0], args[1], args[2], args[3], args[4]) {
+					fmt.Println("[cmd] set")
+				}
+			} else {
+				if setChar(args[0], args[1], "nil", args[2], args[3]) {
+					fmt.Println("[cmd] set")
+				}
+			}
+		} else if stringInSlice(nick, admins) && stringInSlice(modeopt[0], rulemod) {
+			if len(args) == 5 {
+				if setChar(args[0], args[1], args[2], args[3], args[4]) {
+					fmt.Println("[cmd] set")
+					b.Say(nick + " used override, it's super effective!")
+				}
+			} else {
+				if setChar(args[0], args[1], "nil", args[2], args[3]) {
+					fmt.Println("[cmd] set")
+					b.Say(nick + " used override, it's super effective!")
+				}
+			}
+		}
 	case ".print":
 		if len(args) == 4 {
 			b.Say(args[0] + "[" + args[3] + "] = " + printChar(args[0], args[1], args[2], args[3]))
