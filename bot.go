@@ -18,12 +18,12 @@ type Bot struct {
 }
 
 var (
-	admins = []string{"vypr", "bajr", "kirby"}
+	admins = []string{"vypr", "dami", "kirby"}
 	dieopt = []string{"4", "6", "8", "10", "12", "20"}
 	dunmas = ""
 
 	rulemod = []string{"voting"}
-	modeopt = []string{"adminoverride", "saves", "logging", "voting"}
+	modeopt = []string{"adminoverride", "logging", "voting"}
 	initLog = true
 
 	votemap = make(map[string]int)
