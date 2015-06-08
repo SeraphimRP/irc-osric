@@ -5,4 +5,3 @@ go:
 
 install:
   - go get github.com/thoj/go-ircevent
-  - go get github.com/antonholmquist/jason
