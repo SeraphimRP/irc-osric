@@ -245,7 +245,7 @@ func importChar(nick string) bool {
 	file, err := ioutil.ReadFile("json/" + nick + ".json")
 
 	if err != nil {
-		return false
+		panic(err)
 	}
 
 	var char Character
