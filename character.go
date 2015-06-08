@@ -102,7 +102,7 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 		case "classes":
 			var classes string
 			for i := range charmap[nick].personal.classes {
-				if len(charmap[nick].personal.classes > 0 {
+				if len(charmap[nick].personal.classes) > 0 {
 					if len(classes) > 0 {
 						classes = classes + ", " + i	
 					} else {
