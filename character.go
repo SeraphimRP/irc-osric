@@ -52,7 +52,7 @@ type WealthData struct {
 	gems	[]string
 }
 
-var charmap map[string]*Character
+var charmap map[string]Character
 
 func accessChar(set bool, nick string, cat string, item string, val string) string {
 	var pdata, edata, sdata, wdata bool
@@ -237,6 +237,8 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			break
 		}
 	}
+	
+	return "*shrug*"
 }
 
 func importChar(nick string) bool {
@@ -250,7 +252,7 @@ func importChar(nick string) bool {
 
 	json.Unmarshal(file, char)
 	
-	charmap = map[string]*Character{
+	charmap = map[string]Character{
 		char.irc: char,
 	}
 
@@ -259,4 +261,5 @@ func importChar(nick string) bool {
 
 func setChar(nick string, cat string, scat string, item string, value string) bool {
 	// With the changes I'm currently making, this will have to be changed as well.
+	return false
 }
