@@ -101,7 +101,7 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			break
 		case "classes":
 			var classes string
-			for i in range charmap[nick].personal.classes {
+			for i := range charmap[nick].personal.classes {
 				if len(charmap[nick].personal.classes > 0 {
 					if len(classes) > 0 {
 						classes = classes + ", " + i	
@@ -134,7 +134,7 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 		switch (item) {
 		case "armour":
 			var armour string
-			for i in range charmap[nick].equipment.armour {
+			for i := range charmap[nick].equipment.armour {
 				if len(charmap[nick].equipment.armour) > 0 {
 					if len(armour) > 0 {
 						armour = armour + ", " + i	
@@ -146,7 +146,7 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			break
 		case "weapons":
 			var weapons string
-			for i in range charmap[nick].equipment.weapons {
+			for i := range charmap[nick].equipment.weapons {
 				if len(charmap[nick].equipment.weapons) > 0 {
 					if len(weapons) > 0 {
 						weapons = weapons + ", " + i	
@@ -158,7 +158,7 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			break
 		case "items":
 			var items string
-			for i in range charmap[nick].equipment.items {
+			for i := range charmap[nick].equipment.items {
 				if len(charmap[nick].equipment.items) > 0 {
 					if len(items) > 0 {
 						items = items + ", " + i	
@@ -170,7 +170,7 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			break
 		case "missiles":
 			var missiles string
-			for i in range charmap[nick].equipment.missiles {
+			for i := range charmap[nick].equipment.missiles {
 				if len(charmap[nick].equipment.missiles) > 0 {
 					if len(missiles) > 0 {
 						missiles = missiles + ", " + i	
@@ -215,7 +215,7 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			break
 		case "other":
 			var other string
-			for i in range charmap[nick].wealth.other {
+			for i := range charmap[nick].wealth.other {
 				if len(charmap[nick].wealth.other) > 0 {
 					if len(other) > 0 {
 						other = other + ", " + i	
@@ -227,7 +227,7 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			break
 		case "gems":
 			var gems string
-			for i in range charmap[nick].wealth.gems {
+			for i := range charmap[nick].wealth.gems {
 				if len(charmap[nick].wealth.gems) > 0 {
 					if len(gems) > 0 {
 						gems = gems + ", " + i	
