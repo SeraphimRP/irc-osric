@@ -4,9 +4,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"os"
 	"strconv"
-	"strings"
 )
 
 type Character struct {
@@ -79,7 +77,7 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			return "invalid category"
 	}
 	
-	if personal {
+	if pdata {
 		switch (item) {
 		case "name":
 			return charmap[nick].personal.name
@@ -101,12 +99,12 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			break
 		case "classes":
 			var classes string
-			for i := range charmap[nick].personal.classes {
+			for _, j := range charmap[nick].personal.classes {
 				if len(charmap[nick].personal.classes) > 0 {
 					if len(classes) > 0 {
-						classes = classes + ", " + i	
+						classes = classes + ", " + j	
 					} else {
-						classes = i
+						classes = j
 					}
 				}
 			}
@@ -130,52 +128,52 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			return "invalid item"
 			break
 		}
-	} else if equipment {
+	} else if edata {
 		switch (item) {
 		case "armour":
 			var armour string
-			for i := range charmap[nick].equipment.armour {
+			for _, j := range charmap[nick].equipment.armour {
 				if len(charmap[nick].equipment.armour) > 0 {
 					if len(armour) > 0 {
-						armour = armour + ", " + i	
+						armour = armour + ", " + j	
 					} else {
-						armour = i
+						armour = j
 					}
 				}
 			}
 			break
 		case "weapons":
 			var weapons string
-			for i := range charmap[nick].equipment.weapons {
+			for _, j := range charmap[nick].equipment.weapons {
 				if len(charmap[nick].equipment.weapons) > 0 {
 					if len(weapons) > 0 {
-						weapons = weapons + ", " + i	
+						weapons = weapons + ", " + j	
 					} else {
-						weapons = i
+						weapons = j
 					}
 				}
 			}
 			break
 		case "items":
 			var items string
-			for i := range charmap[nick].equipment.items {
+			for _, j := range charmap[nick].equipment.items {
 				if len(charmap[nick].equipment.items) > 0 {
 					if len(items) > 0 {
-						items = items + ", " + i	
+						items = items + ", " + j	
 					} else {
-						items = i
+						items = j
 					}
 				}
 			}
 			break
 		case "missiles":
 			var missiles string
-			for i := range charmap[nick].equipment.missiles {
+			for _, j := range charmap[nick].equipment.missiles {
 				if len(charmap[nick].equipment.missiles) > 0 {
 					if len(missiles) > 0 {
-						missiles = missiles + ", " + i	
+						missiles = missiles + ", " + j
 					} else {
-						missiles = i
+						missiles = j
 					}
 				}
 			}
@@ -184,7 +182,7 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			return "invalid item"
 			break
 		}
-	} else if stats {
+	} else if sdata {
 		switch (item) {
 		case "con":
 			return strconv.Itoa(charmap[nick].stats.con)
@@ -208,31 +206,31 @@ func accessChar(set bool, nick string, cat string, item string, val string) stri
 			return "invalid item"
 			break
 		}
-	} else if wealth {
+	} else if wdata {
 		switch (item) {
 		case "coins":
 			return strconv.Itoa(charmap[nick].wealth.coins)
 			break
 		case "other":
 			var other string
-			for i := range charmap[nick].wealth.other {
+			for _, j := range charmap[nick].wealth.other {
 				if len(charmap[nick].wealth.other) > 0 {
 					if len(other) > 0 {
-						other = other + ", " + i	
+						other = other + ", " + j	
 					} else {
-						other = i
+						other = j
 					}
 				}
 			}
 			break
 		case "gems":
 			var gems string
-			for i := range charmap[nick].wealth.gems {
+			for _, j := range charmap[nick].wealth.gems {
 				if len(charmap[nick].wealth.gems) > 0 {
 					if len(gems) > 0 {
-						gems = gems + ", " + i	
+						gems = gems + ", " + j
 					} else {
-						gems = i
+						gems = j
 					}
 				}
 			}
