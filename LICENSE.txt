@@ -1,23 +1,27 @@
-Copyright (c) 2014-2015, Elliott Pardee
-All rights reserved.
+Redpanduh Public License
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
+Copyright (c) 2015, Elliott Pardee <me [at] elliottpardee [dot] me>
 
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
+You are permitted to do whatever with this software as long as it
+follows the terms listed here:
 
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*   You must include this entire copyright license in
+    the source and in the binary.
+    
+*   Don't infringe on the copyright of this software,
+    that'd just be a dick move.
+    
+*   You're only permitted to sell this software if
+    you've made a significant change to it that hasn't
+    already been made open source and if you give proper
+    credit.
+    
+*   If you do sell this software (granted you follow the
+    terms), it would be respectful to notify the software
+    developer. However, this isn't required.
+    
+*   Using this software for malicious purposes, or
+    changing it to be malicious, is bad, m'kay?
+    
+*   There's no warranty for this software. I'm not liable
+    for anything that happens with this software.
