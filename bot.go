@@ -49,7 +49,7 @@ var dict = map[string]string{
 
 var argmap = map[string]int{
 	".set":     4,
-	".print":   2,
+	".print":   3,
 	".vote":    1,
 	".d":       1,
 	".mode":    1,
