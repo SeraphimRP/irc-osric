@@ -43,9 +43,9 @@ type Character struct {
 	} `json:"wealth"`
 }
 
-var charmap map[string]Character
+var charmap map[string]*Character
 
-func accessChar(set bool, nick string, cat string, item string, val string) string {
+func accessChar(nick string, cat string, item string) string {
 	var pdata, edata, sdata, wdata bool
 
 	switch cat {
@@ -278,14 +278,167 @@ func importChar(nick string) bool {
 		panic(err)
 	}
 
-	charmap = map[string]Character{
-		nick: char,
+	charmap = map[string]*Character{
+		nick: &char,
 	}
 
 	return true
 }
 
-func setChar(nick string, cat string, scat string, item string, value string) bool {
-	// With the changes I'm currently making, this will have to be changed as well.
-	return false
+func setChar(nick string, cat string, item string, value string) bool {
+	var pdata, edata, sdata, wdata bool
+
+	switch cat {
+	case "personal":
+		pdata = true
+		break
+	case "equipment":
+		edata = true
+		break
+	case "stats":
+		sdata = true
+		break
+	case "wealth":
+		wdata = true
+		break
+	default:
+		return false
+	}
+
+	if pdata {
+		switch item {
+		case "name":
+			charmap[nick].Personal.Name = value
+			break
+		case "lvl":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Personal.Lvl = value
+			break
+		case "race":
+			charmap[nick].Personal.Race = value
+			break
+		case "xp":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Personal.Xp = value
+			break
+		case "height":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Personal.Height = value
+			break
+		case "alignment":
+			charmap[nick].Personal.Alignment = value
+			break
+		case "classes":
+			charmap[nick].Personal.Classes = append(charmap[nick].Personal.Classes, value)
+			break
+		case "weight":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Personal.Weight = value
+			break
+		case "sex":
+			charmap[nick].Personal.Sex = value
+			break
+		case "hp":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Personal.Hp = value
+			break
+		case "ac":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Personal.Ac = value
+			break
+		case "age":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Personal.Age = value
+			break
+		default:
+			return false
+			break
+		}
+	} else if edata {
+		switch item {
+		case "armour":
+			var armour interface{}
+			armour = value
+			charmap[nick].Equipment.Armour = append(charmap[nick].Equipment.Armour, armour)
+			break
+		case "weapons":
+			var weapons interface{}
+			weapons = value
+			charmap[nick].Equipment.Weapons = append(charmap[nick].Equipment.Weapons, weapons)
+			break
+		case "items":
+			var items interface{}
+			items = value
+			charmap[nick].Equipment.Items = append(charmap[nick].Equipment.Items, items)
+			break
+		case "missiles":
+			var missiles interface{}
+			missiles = value
+			charmap[nick].Equipment.Missiles = append(charmap[nick].Equipment.Missiles, missiles)
+			break
+		default:
+			return false
+			break
+		}
+	} else if sdata {
+		switch item {
+		case "con":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Stats.Con = value
+			break
+		case "str":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Stats.Str = value
+			break
+		case "intl":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Stats.Intl = value
+			break
+		case "cha":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Stats.Cha = value
+			break
+		case "wis":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Stats.Wis = value
+			break
+		case "dex":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Stats.Dex = value
+			break
+		default:
+			return false
+			break
+		}
+	} else if wdata {
+		switch item {
+		case "coins":
+			value, _ := strconv.Atoi(value)
+			charmap[nick].Wealth.Coins = value
+			break
+		case "other":
+			var other interface{}
+			other = value
+			charmap[nick].Wealth.Other = append(charmap[nick].Wealth.Other, other)
+			break
+		case "gems":
+			var gems interface{}
+			gems = value
+			charmap[nick].Wealth.Gems = append(charmap[nick].Wealth.Gems, gems)
+			break
+		default:
+			return false
+			break
+		}
+	}
+
+	data, _ := json.MarshalIndent(charmap[nick], "", "    ")
+
+	err := ioutil.WriteFile("json/"+nick+".json", data, 0644)
+
+	if err != nil {
+		return false
+	}
+
+	return true
 }
