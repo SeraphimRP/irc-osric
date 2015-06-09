@@ -26,7 +26,7 @@
    "stats" : {
       "con" : 10,
       "str" : 13,
-      "int" : 7,
+      "intl" : 7,
       "cha" : 10,
       "wis" : 13,
       "dex" : 13
