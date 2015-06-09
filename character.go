@@ -357,22 +357,22 @@ func setChar(nick string, cat string, item string, value string) bool {
 	} else if edata {
 		switch item {
 		case "armour":
-			var armour interface{}
+			var armour string
 			armour = value
 			charmap[nick].Equipment.Armour = append(charmap[nick].Equipment.Armour, armour)
 			break
 		case "weapons":
-			var weapons interface{}
+			var weapons string
 			weapons = value
 			charmap[nick].Equipment.Weapons = append(charmap[nick].Equipment.Weapons, weapons)
 			break
 		case "items":
-			var items interface{}
+			var items string
 			items = value
 			charmap[nick].Equipment.Items = append(charmap[nick].Equipment.Items, items)
 			break
 		case "missiles":
-			var missiles interface{}
+			var missiles string
 			missiles = value
 			charmap[nick].Equipment.Missiles = append(charmap[nick].Equipment.Missiles, missiles)
 			break
@@ -417,12 +417,12 @@ func setChar(nick string, cat string, item string, value string) bool {
 			charmap[nick].Wealth.Coins = value
 			break
 		case "other":
-			var other interface{}
+			var other string
 			other = value
 			charmap[nick].Wealth.Other = append(charmap[nick].Wealth.Other, other)
 			break
 		case "gems":
-			var gems interface{}
+			var gems string
 			gems = value
 			charmap[nick].Wealth.Gems = append(charmap[nick].Wealth.Gems, gems)
 			break
