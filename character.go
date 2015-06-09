@@ -14,7 +14,6 @@ type Character struct {
 		Missiles []interface{} `json:"missiles"`
 		Weapons  []interface{} `json:"weapons"`
 	} `json:"equipment"`
-	Irc      string `json:"irc"`
 	Personal struct {
 		Ac        int      `json:"ac"`
 		Age       int      `json:"age"`
