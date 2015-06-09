@@ -7,11 +7,7 @@ Run with `./run.sh`.
 
 Goal: Create an IRC bot that can effectively maintain an active OSRIC session.
 
-Compatible with JSON character sheets generated with a [tiny fork](https://github.com/vypr/osric-cgi) of @kirbyUK's [osric-cgi](https://github.com/kirbyUK/osric-cgi) and OSRIC v1.
-
-TODO:
-
-* Allow people to write values to characters.
+Compatible with JSON character sheets generated with kirbyUK's [osric-cgi](https://github.com/kirbyUK/osric-cgi) and compliant with OSRIC v1.
 
 ---
 
