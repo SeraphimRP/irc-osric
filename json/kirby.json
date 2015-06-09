@@ -1,38 +1,39 @@
 {
-   personal: {
-      name: "Mr. Evil",
-      lvl: 1,
-      race: "Halfling",
-      xp: 0,
-      height: 0,
-      alignment: "Neutral Evil",
-      classes: [
+   "personal" : {
+      "name" : "Mr. Evil",
+      "lvl" : 1,
+      "race" : "Halfling",
+      "xp" : 0,
+      "height" : 0,
+      "alignment" : "Neutral Evil",
+      "classes" : [
          "Fighter",
          "Thief"
       ],
-      weight: 0,
-      sex: "M",
-      hp: 2,
-      ac: 0,
-      age: 35
+      "weight" : 0,
+      "sex" : "M",
+      "hp" : 2,
+      "ac" : 0,
+      "age" : 35
    },
-   equipment: {
-      armour: [],
-      weapons: [],
-      items: [],
-      missiles: []
+   "irc" : "kirby",
+   "equipment" : {
+      "armour" : [],
+      "weapons" : [],
+      "items" : [],
+      "missiles" : []
    },
-   stats: {
-      con: 10,
-      str: 13,
-      intl: 7,
-      cha: 10,
-      wis: 13,
-      dex: 13
+   "stats" : {
+      "con" : 10,
+      "str" : 13,
+      "intl" : 7,
+      "cha" : 10,
+      "wis" : 13,
+      "dex" : 13
    },
-   wealth: {
-      coins: 170,
-      other: [],
-      gems: []
+   "wealth" : {
+      "coins" : 170,
+      "other" : [],
+      "gems" : []
    }
 }
