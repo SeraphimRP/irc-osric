@@ -92,6 +92,11 @@ func vote(nick string) {
 
 func choose() (string, int) {
 	nmap := sortMapByValue(votemap)
+
+	for i, _ := range votemap {
+		votemap[i] = 0
+	}
+
 	return nmap[0].Key, nmap[0].Value
 }
 
@@ -147,7 +152,7 @@ func (b *Bot) Command(nick string, msg string) {
 		break
 
 	case ".vote":
-		if stringInSlice(modeopt[3], rulemod) {
+		if stringInSlice(modeopt[2], rulemod) {
 			vote(args[0])
 			fmt.Println("[cmd] vote - " + args[0])
 		} else {
@@ -200,12 +205,12 @@ func (b *Bot) Command(nick string, msg string) {
 	case ".choose":
 		var val = 0
 
-		if stringInSlice(modeopt[3], rulemod) {
+		if stringInSlice(modeopt[2], rulemod) {
 			dunmas, val = choose()
 			fmt.Println("[cmd] choosing " + dunmas + " as dm")
 			b.Say("the dm is now " + dunmas + " after " + strconv.Itoa(val) + " vote(s)")
 
-			if removeItemInSlice(modeopt[3], rulemod) {
+			if removeItemInSlice(modeopt[2], rulemod) {
 				b.Say("voting is now disabled")
 			}
 		}
@@ -217,8 +222,8 @@ func (b *Bot) Command(nick string, msg string) {
 			fmt.Println("[cmd] resetdm")
 			b.Say("dm has been reset")
 
-			if stringInSlice(modeopt[3], rulemod) {
-				rulemod = append(rulemod, modeopt[3])
+			if !stringInSlice(modeopt[2], rulemod) {
+				rulemod = append(rulemod, modeopt[2])
 				b.Say("voting is now enabled")
 			}
 		} else if stringInSlice(nick, admins) && stringInSlice(modeopt[0], rulemod) && len(dunmas) > 0 {
@@ -227,8 +232,8 @@ func (b *Bot) Command(nick string, msg string) {
 			b.Say("dm has been reset")
 			b.Say(nick + " used override, it's super effective!")
 
-			if stringInSlice(modeopt[3], rulemod) {
-				rulemod = append(rulemod, modeopt[3])
+			if !stringInSlice(modeopt[2], rulemod) {
+				rulemod = append(rulemod, modeopt[2])
 				b.Say("voting is now enabled")
 			}
 		}
@@ -268,7 +273,7 @@ func (b *Bot) Log(line string, initLog bool) {
 }
 
 func (b *Bot) Say(msg string) {
-	if stringInSlice(modeopt[2], rulemod) {
+	if stringInSlice(modeopt[1], rulemod) {
 		b.Log("bot: "+msg, initLog)
 	}
 
